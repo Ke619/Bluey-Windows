@@ -55,5 +55,15 @@ Phone and PC must be on the same Wi-Fi.
   use tray → *Choose Gemini model…* (default `gemini-flash-latest`).
 - Settings and the encrypted key live in `%AppData%\Bluey`; errors go to `%AppData%\Bluey\log.txt`.
 - Not included vs. the original: web research cards and all-day meeting transcription (they need paid APIs).
-- If the phone never connects: check both are on the same Wi-Fi (not a "guest" network that isolates devices)
-  and that the firewall prompt was allowed on Private networks.
+
+## If the phone and PC don't connect
+
+1. **Make your Wi-Fi network "Private" on the PC** (Settings → Network & internet → Wi-Fi → your network → Private).
+   On "Public" networks Windows blocks incoming connections.
+2. **Firewall:** Start → "Allow an app through Windows Firewall" → Change settings → find Bluey → tick **Private and Public**.
+3. **iPhone:** Settings → Bluey → turn on **Local Network** (and Microphone).
+4. **Connect by address:** right-click the Bluey tray icon; the second line shows your PC's address
+   (click it to copy). On the phone's start screen, type that address in the box and tap **Connect**.
+   This skips automatic discovery, which some routers and VPNs break.
+5. Same Wi-Fi name on both (not a "guest" network, not a separate 5 GHz/2.4 GHz "isolated" network).
+6. Turn off VPNs on the PC while testing.
