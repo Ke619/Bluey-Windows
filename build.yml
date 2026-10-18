@@ -1,0 +1,51 @@
+name: Build Bluey
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Publish Bluey.exe
+        run: >
+          dotnet publish Windows/Bluey/Bluey.csproj -c Release -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -o out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Bluey-Windows-exe
+          path: out/Bluey.exe
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Build (unsigned)
+        run: >
+          xcodebuild -project GooglyEyes.xcodeproj -scheme GooglyEyes
+          -sdk iphoneos -configuration Release -derivedDataPath build
+          CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          build
+      - name: Package IPA
+        run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/Bluey.app Payload/
+          zip -qr Bluey.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Bluey-iPhone-ipa
+          path: Bluey.ipa
